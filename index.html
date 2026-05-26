@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>URA Tax Chatbot</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Quicksand:wght@600;700&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline-variant": "#bec9c5",
+                        "on-primary-fixed": "#00201c",
+                        "on-secondary-container": "#007232",
+                        "on-secondary-fixed": "#002109",
+                        "error": "#ba1a1a",
+                        "primary-fixed": "#a8f0e3",
+                        "inverse-on-surface": "#f1effa",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#3f4946",
+                        "secondary": "#006d2f",
+                        "surface-container-low": "#f4f2fd",
+                        "primary-fixed-dim": "#8cd4c7",
+                        "tertiary": "#622d1b",
+                        "on-primary-container": "#8dd5c8",
+                        "inverse-primary": "#8cd4c7",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb59e",
+                        "surface-container": "#eeedf7",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed": "#66ff8e",
+                        "surface-dim": "#dad9e3",
+                        "surface-bright": "#fbf8ff",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed": "#380d02",
+                        "secondary-container": "#5dfd8a",
+                        "primary-container": "#075e54",
+                        "surface": "#fbf8ff",
+                        "inverse-surface": "#2f3038",
+                        "on-primary-fixed-variant": "#005047",
+                        "on-tertiary-fixed-variant": "#6f3725",
+                        "outline": "#6f7976",
+                        "on-background": "#1a1b22",
+                        "on-secondary-fixed-variant": "#005322",
+                        "tertiary-container": "#7e4330",
+                        "surface-container-high": "#e8e7f1",
+                        "on-surface": "#1a1b22",
+                        "surface-container-highest": "#e3e1ec",
+                        "on-error-container": "#93000a",
+                        "on-error": "#ffffff",
+                        "on-tertiary-container": "#ffb69f",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#e3e1ec",
+                        "tertiary-fixed": "#ffdbd0",
+                        "background": "#fbf8ff",
+                        "primary": "#00453d",
+                        "surface-tint": "#1c695f",
+                        "secondary-fixed-dim": "#3de273"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "bubble-gap": "12px",
+                        "section-margin": "24px",
+                        "max-width-desktop": "800px",
+                        "unit": "8px",
+                        "container-padding": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": [
+                            "Quicksand"
+                        ],
+                        "headline-lg-mobile": [
+                            "Quicksand"
+                        ],
+                        "body-lg": [
+                            "Inter"
+                        ],
+                        "body-md": [
+                            "Inter"
+                        ],
+                        "headline-md": [
+                            "Quicksand"
+                        ],
+                        "display-lg": [
+                            "Quicksand"
+                        ],
+                        "label-md": [
+                            "Inter"
+                        ]
+                    },
+                    "fontSize": {
+                        "headline-lg": [
+                            "32px",
+                            {
+                                "lineHeight": "40px",
+                                "fontWeight": "600"
+                            }
+                        ],
+                        "headline-lg-mobile": [
+                            "28px",
+                            {
+                                "lineHeight": "36px",
+                                "fontWeight": "600"
+                            }
+                        ],
+                        "body-lg": [
+                            "18px",
+                            {
+                                "lineHeight": "28px",
+                                "fontWeight": "400"
+                            }
+                        ],
+                        "body-md": [
+                            "16px",
+                            {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                            }
+                        ],
+                        "headline-md": [
+                            "24px",
+                            {
+                                "lineHeight": "32px",
+                                "fontWeight": "600"
+                            }
+                        ],
+                        "display-lg": [
+                            "40px",
+                            {
+                                "lineHeight": "48px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                            }
+                        ],
+                        "label-md": [
+                            "14px",
+                            {
+                                "lineHeight": "20px",
+                                "letterSpacing": "0.01em",
+                                "fontWeight": "600"
+                            }
+                        ]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* Smooth transitions for the slider wrapper */
+        .slider-wrapper {
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        /* Hide horizontal scrollbar but keep vertical scrollbar */
+        .slide {
+            scrollbar-width: thin;
+        }
+
+        .slide::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .slide::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .slide::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 9999px;
+        }
+
+        .dark .slide::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        /* Hide scrollbars for elements with no-scrollbar */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+
+<body class="bg-background text-on-background antialiased font-body-md overflow-hidden w-screen h-screen">
+
+    <!-- TopNavBar (Shared & Fixed) -->
+    <header id="topNav"
+        class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-md shadow-sm transition-all duration-300">
+        <div class="flex justify-between items-center w-full px-container-padding py-4 max-w-[800px] mx-auto">
+            <div class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed cursor-pointer"
+                onclick="goToSlide(0)">
+                URA Tax Chatbot
+            </div>
+            <nav class="hidden md:flex gap-6 items-center">
+                <a id="nav-hero"
+                    class="nav-link font-label-md text-label-md pb-1 border-b-2 transition-colors cursor-pointer text-secondary dark:text-secondary-fixed border-secondary font-bold"
+                    onclick="goToSlide(0)">Home</a>
+                <a id="nav-capabilities"
+                    class="nav-link font-label-md text-label-md pb-1 border-b-2 border-transparent transition-colors cursor-pointer text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed"
+                    onclick="goToSlide(1)">Key Capabilities</a>
+                <a id="nav-works"
+                    class="nav-link font-label-md text-label-md pb-1 border-b-2 border-transparent transition-colors cursor-pointer text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed"
+                    onclick="goToSlide(2)">How It Works</a>
+                <a id="nav-security"
+                    class="nav-link font-label-md text-label-md pb-1 border-b-2 border-transparent transition-colors cursor-pointer text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed"
+                    onclick="goToSlide(3)">Security & Trust</a>
+            </nav>
+            <div class="flex items-center gap-2">
+                <button
+                    class="bg-primary text-on-primary font-label-md text-label-md px-4 py-2 rounded-full hover:opacity-80 active:scale-95 transition-all hidden md:block"
+                    onclick="goToSlide(3)">
+                    Start Chatting
+                </button>
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden text-primary p-2 focus:outline-none" onclick="toggleMobileMenu(true)">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Side Bullet Navigation -->
+    <div class="fixed right-6 top-1/2 -translate-y-1/2 z-40 hidden md:flex flex-col gap-4">
+        <button class="bullet w-3 h-6 rounded-full bg-primary transition-all duration-300" onclick="goToSlide(0)"
+            title="Home"></button>
+        <button class="bullet w-3 h-3 rounded-full bg-primary/20 hover:bg-primary transition-all duration-300"
+            onclick="goToSlide(1)" title="Key Capabilities"></button>
+        <button class="bullet w-3 h-3 rounded-full bg-primary/20 hover:bg-primary transition-all duration-300"
+            onclick="goToSlide(2)" title="How It Works"></button>
+        <button class="bullet w-3 h-3 rounded-full bg-primary/20 hover:bg-primary transition-all duration-300"
+            onclick="goToSlide(3)" title="Security & Trust"></button>
+    </div>
+
+    <!-- Mobile Drawer Menu Overlay -->
+    <div id="mobileMenu"
+        class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300 flex justify-end">
+        <div
+            class="w-64 bg-surface dark:bg-surface-dim h-full p-6 shadow-xl flex flex-col justify-between transform translate-x-full transition-transform duration-300">
+            <div>
+                <div class="flex justify-between items-center mb-8">
+                    <span class="font-headline-md text-primary dark:text-primary-fixed font-bold">Menu</span>
+                    <button class="text-primary p-2 focus:outline-none" onclick="toggleMobileMenu(false)">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                <div class="flex flex-col gap-4">
+                    <a class="mob-nav-link text-lg font-bold text-secondary dark:text-secondary-fixed flex items-center gap-2 py-2 cursor-pointer"
+                        onclick="selectMobileSlide(0)">
+                        <span class="material-symbols-outlined">home</span> Home
+                    </a>
+                    <a class="mob-nav-link text-lg text-on-surface-variant dark:text-outline-variant flex items-center gap-2 py-2 cursor-pointer"
+                        onclick="selectMobileSlide(1)">
+                        <span class="material-symbols-outlined">calculate</span> Key Capabilities
+                    </a>
+                    <a class="mob-nav-link text-lg text-on-surface-variant dark:text-outline-variant flex items-center gap-2 py-2 cursor-pointer"
+                        onclick="selectMobileSlide(2)">
+                        <span class="material-symbols-outlined">timeline</span> How It Works
+                    </a>
+                    <a class="mob-nav-link text-lg text-on-surface-variant dark:text-outline-variant flex items-center gap-2 py-2 cursor-pointer"
+                        onclick="selectMobileSlide(3)">
+                        <span class="material-symbols-outlined">shield</span> Security & Trust
+                    </a>
+                </div>
+            </div>
+            <button
+                class="bg-primary text-on-primary font-label-md text-label-md py-3 rounded-full w-full shadow-md hover:opacity-90 active:scale-95 transition-all"
+                onclick="selectMobileSlide(3)">
+                Start Chatting
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Viewport Slider Container -->
+    <div class="slider-container w-screen h-screen overflow-hidden relative">
+        <div class="slider-wrapper flex w-[400vw] h-full">
+
+            <!-- Slide 0: hero_section_conversational (Home) -->
+            <section id="hero_section_conversational"
+                class="slide w-screen h-full overflow-y-auto pt-[80px] flex flex-col justify-between shrink-0">
+                <!-- Main Content -->
+                <main
+                    class="pt-[40px] pb-section-margin px-container-padding flex-grow flex flex-col items-center justify-center">
+                    <div class="max-w-max-width-desktop w-full mx-auto grid md:grid-cols-2 gap-12 items-center">
+                        <!-- Text Content -->
+                        <div class="flex flex-col gap-6">
+                            <div
+                                class="inline-flex items-center gap-2 bg-surface-container-high px-4 py-2 rounded-full w-fit">
+                                <span class="material-symbols-outlined text-primary text-sm"
+                                    style="font-variation-settings: 'FILL' 1;">forum</span>
+                                <span class="font-label-md text-label-md text-primary">Conversational Ease</span>
+                            </div>
+                            <h1 class="font-display-lg text-display-lg text-on-surface">
+                                Tax Help is Just a Message Away
+                            </h1>
+                            <p class="font-body-lg text-body-lg text-on-surface-variant">
+                                No complex portals or paperwork. Get tax guidance, estimate your liabilities, and more
+                                directly on WhatsApp.
+                            </p>
+                            <div class="pt-4">
+                                <a class="inline-flex items-center justify-center gap-3 bg-[#25D366] text-white font-headline-md text-headline-md px-8 py-4 rounded-full shadow-md hover:opacity-90 active:scale-95 transition-all w-full md:w-auto"
+                                    href="#">
+                                    <svg class="w-6 h-6 fill-current" viewbox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z">
+                                        </path>
+                                    </svg>
+                                    Start Chatting on WhatsApp
+                                </a>
+                            </div>
+                        </div>
+                        <!-- Visual Mockup -->
+                        <div
+                            class="relative w-full aspect-[9/16] max-h-[600px] md:max-h-none rounded-[2.5rem] bg-surface-container shadow-2xl overflow-hidden border-8 border-surface-container-highest mx-auto max-w-[320px]">
+                            <!-- Chat Header -->
+                            <div class="bg-primary px-4 py-3 flex items-center gap-3">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-white flex items-center justify-center overflow-hidden">
+                                    <img alt="URA Logo" class="w-full h-full object-cover"
+                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRuf1Lcz-nElQ-e1JYxsp1ekiaj60GF4fme1T_t8cwLKjIHFKFTrVsZWULXJ6aV_FNGzKeXxIRW5YBULvQUGFi0rSQHUavJqj_a7aBiBsZPiW3n9n2zOupyX1RpQOD_RiT2IaIPxO-wsPBYPjGL6bJIRn5VtY0SXU4aZsDCQ-Y57doIilgpyys_dlb6TNuVev68Nww7RF1cUEXQTRpZXjoR_c5OdfM0lg5EizR5xwz8iJYtiCZn4ES75azGV7dMRXjPqkEyYcoVi8" />
+                                </div>
+                                <div>
+                                    <div class="font-label-md text-label-md text-on-primary">URA Assistant</div>
+                                    <div class="text-xs text-primary-fixed-dim">Online</div>
+                                </div>
+                            </div>
+                            <!-- Chat Body -->
+                            <div class="p-4 flex flex-col gap-4 h-full bg-[#E5DDD5] overflow-y-auto pb-20 no-scrollbar">
+                                <!-- Bot Message -->
+                                <div class="flex flex-col gap-1 max-w-[85%] self-start">
+                                    <div class="bg-white rounded-2xl rounded-tl-sm p-3 shadow-sm relative">
+                                        <p class="font-body-md text-body-md text-on-surface">Hello! I'm your URA Tax
+                                            Assistant. How can I help you today?</p>
+                                        <span class="text-[10px] text-outline absolute bottom-1 right-2">10:00 AM</span>
+                                    </div>
+                                </div>
+                                <!-- User Message -->
+                                <div class="flex flex-col gap-1 max-w-[85%] self-end">
+                                    <div class="bg-[#DCF8C6] rounded-2xl rounded-tr-sm p-3 shadow-sm relative">
+                                        <p class="font-body-md text-body-md text-on-surface">I need to estimate my
+                                            income tax for this quarter.</p>
+                                        <span
+                                            class="text-[10px] text-outline absolute bottom-1 right-2 flex items-center gap-1">10:02
+                                            AM <span class="material-symbols-outlined text-[12px] text-blue-500"
+                                                style="font-variation-settings: 'FILL' 1;">done_all</span></span>
+                                    </div>
+                                </div>
+                                <!-- Bot Message with Chips -->
+                                <div class="flex flex-col gap-2 max-w-[90%] self-start mt-2">
+                                    <div class="bg-white rounded-2xl rounded-tl-sm p-3 shadow-sm relative">
+                                        <p class="font-body-md text-body-md text-on-surface">I can help with that! What
+                                            type of income are we looking at?</p>
+                                        <span class="text-[10px] text-outline absolute bottom-1 right-2">10:03 AM</span>
+                                    </div>
+                                    <div class="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+                                        <button
+                                            class="whitespace-nowrap px-3 py-1.5 bg-white border border-primary text-primary font-label-md text-label-md rounded-full shadow-sm">Salary</button>
+                                        <button
+                                            class="whitespace-nowrap px-3 py-1.5 bg-white border border-primary text-primary font-label-md text-label-md rounded-full shadow-sm">Business</button>
+                                        <button
+                                            class="whitespace-nowrap px-3 py-1.5 bg-white border border-primary text-primary font-label-md text-label-md rounded-full shadow-sm">Rental</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Chat Input -->
+                            <div class="absolute bottom-0 w-full bg-[#f0f0f0] p-2 flex items-center gap-2">
+                                <div class="bg-white rounded-full flex-1 flex items-center px-4 py-2 shadow-sm">
+                                    <span class="material-symbols-outlined text-outline mr-2">sentiment_satisfied</span>
+                                    <input
+                                        class="bg-transparent border-none focus:ring-0 w-full font-body-md text-body-md"
+                                        disabled="" placeholder="Type a message" type="text" />
+                                    <span class="material-symbols-outlined text-outline ml-2">attach_file</span>
+                                </div>
+                                <div
+                                    class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white shadow-sm shrink-0">
+                                    <span class="material-symbols-outlined">mic</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+                <!-- Footer -->
+                <footer class="bg-surface-container dark:bg-surface-container-high w-full mt-auto">
+                    <div
+                        class="w-full py-6 px-container-padding max-w-[800px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+                        <div class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">
+                            URA Tax Chatbot
+                        </div>
+                        <div class="flex flex-wrap justify-center gap-4">
+                            <a class="font-label-md text-label-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed underline transition-all"
+                                href="#">Contact Us</a>
+                            <a class="font-label-md text-label-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed underline transition-all"
+                                href="#">Privacy Policy</a>
+                            <a class="font-label-md text-label-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed underline transition-all"
+                                href="#">Terms of Service</a>
+                            <a class="font-label-md text-label-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed underline transition-all"
+                                href="#">URA Portal</a>
+                        </div>
+                        <div
+                            class="font-body-md text-body-md text-on-surface-variant text-center md:text-right text-sm">
+                            © 2026 URA Tax Compliance. Humanizing tax through conversation.
+                        </div>
+                    </div>
+                </footer>
+            </section>
+
+            <!-- Slide 1: key_capabilities_conversational -->
+            <section id="key_capabilities_conversational"
+                class="slide w-screen h-full overflow-y-auto pt-[80px] flex flex-col justify-between shrink-0">
+                <!-- Main Content -->
+                <main
+                    class="flex-grow pt-[40px] pb-section-margin px-container-padding max-w-max-width-desktop mx-auto w-full flex flex-col items-center justify-center">
+                    <header class="text-center mb-12 mt-4 w-full">
+                        <h1 class="font-display-lg text-display-lg text-primary mb-4">Key Capabilities</h1>
+                        <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">Everything you
+                            need to manage your taxes, right inside a simple chat interface.</p>
+                    </header>
+                    <!-- Capabilities Grid -->
+                    <section class="grid grid-cols-1 md:grid-cols-2 gap-bubble-gap w-full">
+                        <!-- Card 1: Tax Estimation -->
+                        <div
+                            class="bg-surface-container-lowest p-6 rounded-t-[24px] rounded-bl-[8px] rounded-br-[24px] shadow-sm border border-surface-variant hover:shadow-md transition-shadow flex flex-col gap-4 relative group">
+                            <div
+                                class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed group-hover:bg-primary-fixed-dim transition-colors">
+                                <span class="material-symbols-outlined"
+                                    style="font-variation-settings: 'FILL' 1;">calculate</span>
+                            </div>
+                            <div>
+                                <h3 class="font-headline-md text-headline-md text-primary mb-2">Tax Estimation</h3>
+                                <p class="font-body-md text-body-md text-on-surface-variant">Calculate your potential
+                                    taxes instantly.</p>
+                            </div>
+                        </div>
+                        <!-- Card 2: Registration -->
+                        <div
+                            class="bg-surface-container-lowest p-6 rounded-t-[24px] rounded-bl-[24px] rounded-br-[8px] md:rounded-bl-[8px] md:rounded-br-[24px] shadow-sm border border-surface-variant hover:shadow-md transition-shadow flex flex-col gap-4 relative group">
+                            <div
+                                class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed group-hover:bg-primary-fixed-dim transition-colors">
+                                <span class="material-symbols-outlined"
+                                    style="font-variation-settings: 'FILL' 1;">how_to_reg</span>
+                            </div>
+                            <div>
+                                <h3 class="font-headline-md text-headline-md text-primary mb-2">Registration</h3>
+                                <p class="font-body-md text-body-md text-on-surface-variant">Step-by-step TIN
+                                    registration support.</p>
+                            </div>
+                        </div>
+                        <!-- Card 3: Reminders -->
+                        <div
+                            class="bg-surface-container-lowest p-6 rounded-t-[24px] rounded-bl-[8px] rounded-br-[24px] shadow-sm border border-surface-variant hover:shadow-md transition-shadow flex flex-col gap-4 relative group">
+                            <div
+                                class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed group-hover:bg-primary-fixed-dim transition-colors">
+                                <span class="material-symbols-outlined"
+                                    style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+                            </div>
+                            <div>
+                                <h3 class="font-headline-md text-headline-md text-primary mb-2">Reminders</h3>
+                                <p class="font-body-md text-body-md text-on-surface-variant">Get alerts for upcoming tax
+                                    deadlines.</p>
+                            </div>
+                        </div>
+                        <!-- Card 4: Balance Check -->
+                        <div
+                            class="bg-surface-container-lowest p-6 rounded-t-[24px] rounded-bl-[24px] rounded-br-[8px] shadow-sm border border-surface-variant hover:shadow-md transition-shadow flex flex-col gap-4 relative group">
+                            <div
+                                class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed group-hover:bg-primary-fixed-dim transition-colors">
+                                <span class="material-symbols-outlined"
+                                    style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+                            </div>
+                            <div>
+                                <h3 class="font-headline-md text-headline-md text-primary mb-2">Balance Check</h3>
+                                <p class="font-body-md text-body-md text-on-surface-variant">Inquire about your URA
+                                    account status.</p>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+                <!-- Footer -->
+                <footer class="bg-surface-container dark:bg-surface-container-high w-full mt-auto">
+                    <div
+                        class="w-full py-6 px-container-padding max-w-[800px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+                        <div
+                            class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed text-center md:text-left">
+                            © 2026 URA Tax Compliance. Humanizing tax through conversation.
+                        </div>
+                        <div class="flex flex-wrap justify-center gap-4">
+                            <a class="text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed underline transition-all font-label-md text-label-md"
+                                href="#">Contact Us</a>
+                            <a class="text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed underline transition-all font-label-md text-label-md"
+                                href="#">Privacy Policy</a>
+                            <a class="text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed underline transition-all font-label-md text-label-md"
+                                href="#">Terms of Service</a>
+                            <a class="text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed underline transition-all font-label-md text-label-md"
+                                href="#">URA Portal</a>
+                        </div>
+                    </div>
+                </footer>
+            </section>
+
+            <!-- Slide 2: how_it_works_conversational -->
+            <section id="how_it_works_conversational"
+                class="slide w-screen h-full overflow-y-auto pt-[80px] flex flex-col justify-between shrink-0">
+                <!-- Main Content -->
+                <main class="flex-grow pt-[40px] px-container-padding w-full max-w-[800px] mx-auto pb-section-margin">
+                    <!-- Header -->
+                    <header class="text-center mt-4 mb-16">
+                        <h1 class="font-display-lg text-display-lg text-primary mb-4 hidden md:block">Simple.
+                            Conversational. Done.</h1>
+                        <h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary mb-4 block md:hidden">
+                            Simple. Conversational. Done.</h1>
+                        <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">See how easy it
+                            is to manage your tax compliance with a simple chat.</p>
+                    </header>
+                    <!-- Conversational Timeline -->
+                    <section class="relative">
+                        <!-- Central Line (Desktop) / Left Line (Mobile) -->
+                        <div
+                            class="absolute left-[32px] md:left-1/2 top-0 bottom-0 w-[2px] bg-surface-container-high md:-translate-x-1/2 z-0">
+                        </div>
+                        <div class="space-y-12">
+                            <!-- Step 1 -->
+                            <div class="relative flex items-start md:justify-center z-10 group">
+                                <!-- Mobile / Desktop Left alignment helper -->
+                                <div
+                                    class="w-[64px] flex-shrink-0 flex justify-center md:absolute md:left-1/2 md:-translate-x-1/2">
+                                    <div
+                                        class="w-12 h-12 rounded-full bg-surface shadow-sm border-2 border-primary flex items-center justify-center transition-transform group-hover:scale-110">
+                                        <span class="font-headline-md text-headline-md text-primary">1</span>
+                                    </div>
+                                </div>
+                                <!-- Content Card -->
+                                <div
+                                    class="ml-4 md:ml-0 md:w-1/2 md:pr-16 md:text-right flex flex-col md:items-end w-full">
+                                    <div
+                                        class="bg-surface-container-lowest p-6 rounded-[1rem] md:rounded-l-[1rem] md:rounded-r-none md:rounded-bl-[1rem] shadow-[0_4px_24px_rgba(0,0,0,0.04)] border border-surface-variant max-w-[340px] relative">
+                                        <!-- Chat tail effect -->
+                                        <div
+                                            class="hidden md:block absolute right-[-8px] top-6 w-4 h-4 bg-surface-container-lowest border-t border-r border-surface-variant rotate-45 z-0">
+                                        </div>
+                                        <div
+                                            class="block md:hidden absolute left-[-8px] top-6 w-4 h-4 bg-surface-container-lowest border-b border-l border-surface-variant rotate-45 z-0">
+                                        </div>
+                                        <div
+                                            class="flex items-center md:justify-end mb-2 space-x-2 md:space-x-reverse relative z-10">
+                                            <span class="material-symbols-outlined text-secondary"
+                                                style="font-variation-settings: 'FILL' 1;">contacts</span>
+                                            <h3 class="font-headline-md text-headline-md text-on-surface">Save the
+                                                Number</h3>
+                                        </div>
+                                        <p class="font-body-md text-body-md text-on-surface-variant relative z-10">Add
+                                            URA Bot to your contacts.</p>
+                                    </div>
+                                </div>
+                                <!-- Empty space for layout balance on desktop -->
+                                <div class="hidden md:block md:w-1/2"></div>
+                            </div>
+                            <!-- Step 2 -->
+                            <div class="relative flex items-start md:justify-center z-10 group">
+                                <div
+                                    class="w-[64px] flex-shrink-0 flex justify-center md:absolute md:left-1/2 md:-translate-x-1/2">
+                                    <div
+                                        class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container shadow-sm border-2 border-primary-container flex items-center justify-center transition-transform group-hover:scale-110">
+                                        <span class="font-headline-md text-headline-md">2</span>
+                                    </div>
+                                </div>
+                                <div class="hidden md:block md:w-1/2"></div>
+                                <div class="ml-4 md:ml-0 md:w-1/2 md:pl-16 w-full">
+                                    <div
+                                        class="bg-primary-container/10 p-6 rounded-[1rem] md:rounded-r-[1rem] md:rounded-l-none md:rounded-br-[1rem] shadow-none border border-transparent max-w-[340px] relative">
+                                        <!-- Chat tail effect -->
+                                        <div
+                                            class="hidden md:block absolute left-[-8px] top-6 w-4 h-4 bg-[#eff5f4] rotate-45 z-0">
+                                        </div>
+                                        <div
+                                            class="block md:hidden absolute left-[-8px] top-6 w-4 h-4 bg-[#eff5f4] rotate-45 z-0">
+                                        </div>
+                                        <div class="flex items-center mb-2 space-x-2 relative z-10">
+                                            <span class="material-symbols-outlined text-primary"
+                                                style="font-variation-settings: 'FILL' 1;">waving_hand</span>
+                                            <h3 class="font-headline-md text-headline-md text-primary">Say Hello</h3>
+                                        </div>
+                                        <p class="font-body-md text-body-md text-on-surface-variant relative z-10">Send
+                                            a "Hi" to start the conversation.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Step 3 -->
+                            <div class="relative flex items-start md:justify-center z-10 group">
+                                <div
+                                    class="w-[64px] flex-shrink-0 flex justify-center md:absolute md:left-1/2 md:-translate-x-1/2">
+                                    <div
+                                        class="w-12 h-12 rounded-full bg-surface shadow-sm border-2 border-outline-variant flex items-center justify-center transition-transform group-hover:scale-110">
+                                        <span class="font-headline-md text-headline-md text-outline">3</span>
+                                    </div>
+                                </div>
+                                <div
+                                    class="ml-4 md:ml-0 md:w-1/2 md:pr-16 md:text-right flex flex-col md:items-end w-full">
+                                    <div
+                                        class="bg-surface-container-lowest p-6 rounded-[1rem] md:rounded-l-[1rem] md:rounded-r-none md:rounded-bl-[1rem] shadow-[0_4px_24px_rgba(0,0,0,0.04)] border border-surface-variant max-w-[340px] relative">
+                                        <!-- Chat tail effect -->
+                                        <div
+                                            class="hidden md:block absolute right-[-8px] top-6 w-4 h-4 bg-surface-container-lowest border-t border-r border-surface-variant rotate-45 z-0">
+                                        </div>
+                                        <div
+                                            class="block md:hidden absolute left-[-8px] top-6 w-4 h-4 bg-surface-container-lowest border-b border-l border-surface-variant rotate-45 z-0">
+                                        </div>
+                                        <div
+                                            class="flex items-center md:justify-end mb-2 space-x-2 md:space-x-reverse relative z-10">
+                                            <span class="material-symbols-outlined text-secondary"
+                                                style="font-variation-settings: 'FILL' 1;">list_alt</span>
+                                            <h3 class="font-headline-md text-headline-md text-on-surface">Get Guidance
+                                            </h3>
+                                        </div>
+                                        <p class="font-body-md text-body-md text-on-surface-variant relative z-10">
+                                            Choose an option from the menu.</p>
+                                    </div>
+                                </div>
+                                <div class="hidden md:block md:w-1/2"></div>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+                <!-- Footer -->
+                <footer class="bg-surface-container dark:bg-surface-container-high w-full mt-auto">
+                    <div
+                        class="w-full py-6 px-container-padding max-w-[800px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+                        <div class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">
+                            URA Tax Chatbot
+                        </div>
+                        <div class="flex flex-wrap justify-center gap-4">
+                            <a class="text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed underline transition-all font-label-md text-label-md"
+                                href="#">Contact Us</a>
+                            <a class="text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed underline transition-all font-label-md text-label-md"
+                                href="#">Privacy Policy</a>
+                            <a class="text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed underline transition-all font-label-md text-label-md"
+                                href="#">Terms of Service</a>
+                            <a class="text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed underline transition-all font-label-md text-label-md"
+                                href="#">URA Portal</a>
+                        </div>
+                        <div class="font-body-md text-body-md text-on-surface-variant text-center md:text-right">
+                            © 2026 URA Tax Compliance. Humanizing tax through conversation.
+                        </div>
+                    </div>
+                </footer>
+            </section>
+
+            <!-- Slide 3: security_trust_conversational -->
+            <section id="security_trust_conversational"
+                class="slide w-screen h-full overflow-y-auto pt-[80px] flex flex-col justify-between shrink-0">
+                <!-- Main Content -->
+                <main
+                    class="flex-grow pt-[40px] pb-section-margin px-container-padding max-w-[800px] mx-auto w-full flex flex-col gap-section-margin justify-center">
+                    <!-- Security Hero Section -->
+                    <section
+                        class="bg-primary-fixed/20 rounded-[2rem] p-8 md:p-12 flex flex-col items-center text-center relative overflow-hidden shadow-sm">
+                        <div class="absolute -top-10 -right-10 w-40 h-40 bg-primary-fixed/30 rounded-full blur-3xl">
+                        </div>
+                        <div
+                            class="absolute -bottom-10 -left-10 w-40 h-40 bg-secondary-fixed-dim/20 rounded-full blur-3xl">
+                        </div>
+                        <!-- Bot Chat Bubble Header -->
+                        <div
+                            class="bg-surface-container-lowest rounded-DEFAULT rounded-tl-none p-6 shadow-[0_4px_16px_rgba(0,0,0,0.05)] max-w-md relative z-10 animate-fade-in-up">
+                            <h1
+                                class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-2">
+                                Your data is safe with us.</h1>
+                            <p class="font-body-md text-body-md text-on-surface-variant">We treat your tax information
+                                like a confidential conversation.</p>
+                            <div class="absolute -bottom-6 right-4 text-outline-variant font-label-md text-[10px]">Just
+                                now</div>
+                        </div>
+                    </section>
+                    <!-- Security Features Bento Grid -->
+                    <section class="grid grid-cols-1 md:grid-cols-3 gap-unit w-full">
+                        <!-- Feature 1 -->
+                        <div
+                            class="bg-surface rounded-DEFAULT p-6 border border-surface-variant flex flex-col items-start gap-4 hover:shadow-md transition-shadow">
+                            <div class="bg-primary-container/10 p-3 rounded-full text-primary">
+                                <span class="material-symbols-outlined text-3xl"
+                                    style="font-variation-settings: 'FILL' 1;">enhanced_encryption</span>
+                            </div>
+                            <div>
+                                <h3 class="font-headline-md text-headline-md text-primary-fixed-variant mb-2">End-to-end
+                                    encrypted chats</h3>
+                                <p class="font-body-sm text-body-sm text-on-surface-variant">Every message is scrambled
+                                    before it leaves your device, ensuring only you and our secure servers can read it.
+                                </p>
+                            </div>
+                        </div>
+                        <!-- Feature 2 -->
+                        <div
+                            class="bg-surface rounded-DEFAULT p-6 border border-surface-variant flex flex-col items-start gap-4 hover:shadow-md transition-shadow">
+                            <div class="bg-secondary-container/20 p-3 rounded-full text-secondary">
+                                <span class="material-symbols-outlined text-3xl"
+                                    style="font-variation-settings: 'FILL' 1;">verified</span>
+                            </div>
+                            <div>
+                                <h3 class="font-headline-md text-headline-md text-primary-fixed-variant mb-2">Official
+                                    URA Service</h3>
+                                <p class="font-body-sm text-body-sm text-on-surface-variant">Directly connected to the
+                                    Uganda Revenue Authority infrastructure, completely bypassing third-party risks.</p>
+                            </div>
+                        </div>
+                        <!-- Feature 3 -->
+                        <div
+                            class="bg-surface rounded-DEFAULT p-6 border border-surface-variant flex flex-col items-start gap-4 hover:shadow-md transition-shadow">
+                            <div class="bg-tertiary-container/10 p-3 rounded-full text-tertiary">
+                                <span class="material-symbols-outlined text-3xl"
+                                    style="font-variation-settings: 'FILL' 1;">shield_person</span>
+                            </div>
+                            <div>
+                                <h3 class="font-headline-md text-headline-md text-primary-fixed-variant mb-2">Privacy
+                                    Protected</h3>
+                                <p class="font-body-sm text-body-sm text-on-surface-variant">Your conversational data is
+                                    never sold or shared. It's used solely to assist you with your compliance journey.
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- Reassurance User Bubble -->
+                    <div class="flex justify-end mt-4 w-full">
+                        <div
+                            class="bg-primary-fixed text-on-primary-fixed rounded-DEFAULT rounded-br-none p-4 shadow-sm max-w-xs md:max-w-sm">
+                            <p class="font-body-md text-body-md font-medium">That's good to know. Let's get started on
+                                my returns.</p>
+                            <div class="text-right text-primary font-label-md text-[10px] opacity-70 mt-1">Read</div>
+                        </div>
+                    </div>
+                </main>
+                <!-- Footer -->
+                <footer class="bg-surface-container dark:bg-surface-container-high w-full mt-auto">
+                    <div
+                        class="w-full py-6 px-container-padding max-w-[800px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+                        <div class="text-center md:text-left">
+                            <div
+                                class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed mb-2">
+                                URA Tax Chatbot</div>
+                            <p
+                                class="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant text-sm">
+                                © 2026 URA Tax Compliance. Humanizing tax through conversation.</p>
+                        </div>
+                        <div class="flex flex-wrap justify-center gap-4 md:gap-6 mt-4 md:mt-0">
+                            <a class="font-label-md text-label-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed underline transition-all"
+                                href="#">Contact Us</a>
+                            <a class="font-label-md text-label-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed underline transition-all"
+                                href="#">Privacy Policy</a>
+                            <a class="font-label-md text-label-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed underline transition-all"
+                                href="#">Terms of Service</a>
+                            <a class="font-label-md text-label-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed underline transition-all"
+                                href="#">URA Portal</a>
+                        </div>
+                    </div>
+                </footer>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Script Area for Navigation, Swiping, and Smooth Transitions -->
+    <script>
+        let currentSlide = 0;
+        const totalSlides = 4;
+        const navLinks = [
+            document.getElementById('nav-hero'),
+            document.getElementById('nav-capabilities'),
+            document.getElementById('nav-works'),
+            document.getElementById('nav-security')
+        ];
+
+        function goToSlide(index) {
+            currentSlide = index;
+            const wrapper = document.querySelector('.slider-wrapper');
+            wrapper.style.transform = `translateX(-${index * 100}vw)`;
+
+            // Update Desktop Nav Links
+            navLinks.forEach((link, idx) => {
+                if (idx === index) {
+                    link.className = "nav-link font-label-md text-label-md pb-1 border-b-2 transition-colors cursor-pointer text-secondary dark:text-secondary-fixed border-secondary font-bold";
+                } else {
+                    link.className = "nav-link font-label-md text-label-md pb-1 border-b-2 border-transparent transition-colors cursor-pointer text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed";
+                }
+            });
+
+            // Update Side Bullets
+            const bullets = document.querySelectorAll('.bullet');
+            bullets.forEach((bullet, idx) => {
+                if (idx === index) {
+                    bullet.className = "bullet w-3 h-6 rounded-full bg-primary transition-all duration-300";
+                } else {
+                    bullet.className = "bullet w-3 h-3 rounded-full bg-primary/20 hover:bg-primary transition-all duration-300";
+                }
+            });
+
+            // Update Mobile Drawer Links
+            const mobLinks = document.querySelectorAll('.mob-nav-link');
+            mobLinks.forEach((link, idx) => {
+                if (idx === index) {
+                    link.className = "mob-nav-link text-lg font-bold text-secondary dark:text-secondary-fixed flex items-center gap-2 py-2 cursor-pointer";
+                } else {
+                    link.className = "mob-nav-link text-lg text-on-surface-variant dark:text-outline-variant flex items-center gap-2 py-2 cursor-pointer";
+                }
+            });
+        }
+
+        // Mobile Menu controls
+        function toggleMobileMenu(isOpen) {
+            const menu = document.getElementById('mobileMenu');
+            const content = menu.querySelector('div');
+            if (isOpen) {
+                menu.classList.remove('pointer-events-none', 'opacity-0');
+                menu.classList.add('opacity-100');
+                content.classList.remove('translate-x-full');
+                content.classList.add('translate-x-0');
+            } else {
+                menu.classList.remove('opacity-100');
+                menu.classList.add('opacity-0', 'pointer-events-none');
+                content.classList.remove('translate-x-0');
+                content.classList.add('translate-x-full');
+            }
+        }
+
+        function selectMobileSlide(index) {
+            goToSlide(index);
+            toggleMobileMenu(false);
+        }
+
+        // Add Scroll shadow effect to shared header based on active slide's scroll position
+        const slides = document.querySelectorAll('.slide');
+        const nav = document.getElementById('topNav');
+
+        slides.forEach(slide => {
+            slide.addEventListener('scroll', () => {
+                if (slide.scrollTop > 10) {
+                    nav.classList.add('shadow-md', 'bg-surface/95');
+                    nav.classList.remove('shadow-sm', 'bg-surface/80');
+                } else {
+                    nav.classList.add('shadow-sm', 'bg-surface/80');
+                    nav.classList.remove('shadow-md', 'bg-surface/95');
+                }
+            });
+        });
+
+        // Touch gesture swipe detection
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        document.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, { passive: true });
+
+        function handleSwipe() {
+            const threshold = 80; // minimum swipe distance in px
+            if (touchEndX < touchStartX - threshold) {
+                // Swiped Left -> Next Slide
+                if (currentSlide < totalSlides - 1) {
+                    goToSlide(currentSlide + 1);
+                }
+            }
+            if (touchEndX > touchStartX + threshold) {
+                // Swiped Right -> Previous Slide
+                if (currentSlide > 0) {
+                    goToSlide(currentSlide - 1);
+                }
+            }
+        }
+
+        // Keyboard navigation (Left/Right Arrows)
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowRight') {
+                if (currentSlide < totalSlides - 1) {
+                    goToSlide(currentSlide + 1);
+                }
+            } else if (e.key === 'ArrowLeft') {
+                if (currentSlide > 0) {
+                    goToSlide(currentSlide - 1);
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
